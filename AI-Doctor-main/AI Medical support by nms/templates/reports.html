@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block title %}Medical Reports Analysis{% endblock %}
+
+{% block extra_css %}
+<style>
+    .reports-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+
+    .reports-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .upload-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .dropzone {
+        border: 2px dashed var(--secondary-color);
+        border-radius: 10px;
+        padding: 2rem;
+        margin: 1rem 0;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .dropzone:hover {
+        background: #f8f9fa;
+    }
+
+    .dropzone i {
+        font-size: 3rem;
+        color: var(--secondary-color);
+        margin-bottom: 1rem;
+    }
+
+    .file-list {
+        margin-top: 1rem;
+        text-align: left;
+    }
+
+    .file-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: #f8f9fa;
+        padding: 0.8rem;
+        border-radius: 5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .file-item i {
+        color: var(--secondary-color);
+    }
+
+    .remove-file {
+        margin-left: auto;
+        color: var(--accent-color);
+        cursor: pointer;
+    }
+
+    .analysis-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .analysis-card {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .analysis-card h3 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .highlight {
+        background: #fff3cd;
+        padding: 0.2rem 0.5rem;
+        border-radius: 3px;
+        font-weight: 600;
+    }
+
+    .trend-chart {
+        width: 100%;
+        height: 200px;
+        margin-top: 1rem;
+        background: #f8f9fa;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+    }
+
+    .export-button {
+        display: inline-block;
+        padding: 0.8rem 1.5rem;
+        background: var(--secondary-color);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        margin-top: 1rem;
+        transition: background 0.3s ease;
+    }
+
+    .export-button:hover {
+        background: var(--primary-color);
+    }
+
+    @media (max-width: 768px) {
+        .analysis-section {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="reports-container">
+    <div class="reports-header">
+        <h1>Medical Reports Analysis</h1>
+        <p>Upload your medical reports for AI-powered analysis and interpretation</p>
+    </div>
+
+    <div class="upload-section" data-aos="fade-up">
+        <h2>Upload Reports</h2>
+        <p>Supported formats: PDF, JPG, PNG</p>
+        
+        <div class="dropzone" id="dropzone">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Drag and drop files here or click to browse</p>
+            <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+        </div>
+
+        <div class="file-list" id="fileList">
+            <!-- Files will be listed here -->
+        </div>
+    </div>
+
+    <div class="analysis-section">
+        <div class="analysis-card" data-aos="fade-up">
+            <h3><i class="fas fa-chart-line"></i> Key Findings</h3>
+            <div id="findings">
+                <p>Upload reports to see AI analysis</p>
+            </div>
+        </div>
+
+        <div class="analysis-card" data-aos="fade-up" data-aos-delay="100">
+            <h3><i class="fas fa-history"></i> Historical Trends</h3>
+            <div class="trend-chart">
+                <p>Chart will appear after analysis</p>
+            </div>
+        </div>
+
+        <div class="analysis-card" data-aos="fade-up" data-aos-delay="200">
+            <h3><i class="fas fa-exclamation-circle"></i> Important Notes</h3>
+            <div id="notes">
+                <p>Upload reports to see important notes</p>
+            </div>
+            <a href="#" class="export-button" id="exportButton">
+                <i class="fas fa-download"></i> Export Analysis
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    const fileList = document.getElementById('fileList');
+    const exportButton = document.getElementById('exportButton');
+    
+    // Handle file selection
+    dropzone.addEventListener('click', () => fileInput.click());
+    
+    dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.style.background = '#f8f9fa';
+    });
+    
+    dropzone.addEventListener('dragleave', () => {
+        dropzone.style.background = 'white';
+    });
+    
+    dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.style.background = 'white';
+        handleFiles(e.dataTransfer.files);
+    });
+    
+    fileInput.addEventListener('change', () => {
+        handleFiles(fileInput.files);
+    });
+    
+    function handleFiles(files) {
+        Array.from(files).forEach(file => {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.innerHTML = `
+                <i class="fas fa-file"></i>
+                <span>${file.name}</span>
+                <i class="fas fa-times remove-file"></i>
+            `;
+            
+            fileItem.querySelector('.remove-file').addEventListener('click', () => {
+                fileItem.remove();
+                updateAnalysis();
+            });
+            
+            fileList.appendChild(fileItem);
+            updateAnalysis();
+        });
+    }
+    
+    function updateAnalysis() {
+        // TODO: Implement actual file analysis
+        const findings = document.getElementById('findings');
+        if (fileList.children.length > 0) {
+            findings.innerHTML = `
+                <p>Analysis in progress...</p>
+                <p>Found <span class="highlight">3</span> notable items</p>
+            `;
+        } else {
+            findings.innerHTML = '<p>Upload reports to see AI analysis</p>';
+        }
+    }
+    
+    exportButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (fileList.children.length > 0) {
+            alert('Analysis report will be exported soon.');
+        } else {
+            alert('Please upload reports to generate analysis.');
+        }
+    });
+});
+</script>
+{% endblock %} 

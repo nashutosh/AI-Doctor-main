@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}Emergency Guide{% endblock %}
+
+{% block extra_css %}
+<style>
+    .emergency-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+
+    .emergency-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: var(--accent-color);
+    }
+
+    .emergency-call {
+        background: var(--accent-color);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 2rem;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(1); }
+    }
+
+    .emergency-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .emergency-card {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .emergency-card h3 {
+        color: var(--accent-color);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .emergency-card i {
+        font-size: 1.5rem;
+    }
+
+    .steps-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .steps-list li {
+        margin-bottom: 0.8rem;
+        padding-left: 1.5rem;
+        position: relative;
+    }
+
+    .steps-list li::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: var(--secondary-color);
+    }
+
+    .warning {
+        background: #fff3cd;
+        color: #856404;
+        padding: 1rem;
+        border-radius: 5px;
+        margin-top: 1rem;
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+        .emergency-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="emergency-container">
+    <div class="emergency-header">
+        <h1>Emergency Medical Guide</h1>
+        <p>Quick access to emergency procedures and first aid instructions</p>
+    </div>
+
+    <div class="emergency-call">
+        <h2><i class="fas fa-phone-alt"></i> Emergency: Call 911</h2>
+        <p>If you're experiencing a medical emergency, call emergency services immediately</p>
+    </div>
+
+    <div class="emergency-grid">
+        <div class="emergency-card" data-aos="fade-up">
+            <h3><i class="fas fa-heart"></i> Chest Pain</h3>
+            <ul class="steps-list">
+                <li>Have the person sit down and rest immediately</li>
+                <li>Call emergency services (911)</li>
+                <li>Loosen any tight clothing</li>
+                <li>If prescribed, assist with nitroglycerin medication</li>
+                <li>Monitor breathing and consciousness</li>
+            </ul>
+            <div class="warning">
+                Warning: Chest pain could indicate a heart attack. Immediate medical attention is crucial.
+            </div>
+        </div>
+
+        <div class="emergency-card" data-aos="fade-up" data-aos-delay="100">
+            <h3><i class="fas fa-brain"></i> Stroke Symptoms</h3>
+            <ul class="steps-list">
+                <li>Remember FAST:</li>
+                <li>Face - Check for facial drooping</li>
+                <li>Arms - Test arm weakness</li>
+                <li>Speech - Listen for slurred speech</li>
+                <li>Time - Call 911 immediately</li>
+            </ul>
+            <div class="warning">
+                Warning: Time is critical in stroke treatment. Every minute counts.
+            </div>
+        </div>
+
+        <div class="emergency-card" data-aos="fade-up" data-aos-delay="200">
+            <h3><i class="fas fa-lungs"></i> Breathing Difficulties</h3>
+            <ul class="steps-list">
+                <li>Help person into comfortable position</li>
+                <li>Ensure access to fresh air</li>
+                <li>Loosen tight clothing</li>
+                <li>Assist with prescribed inhaler if available</li>
+                <li>Call 911 if symptoms are severe</li>
+            </ul>
+            <div class="warning">
+                Warning: Severe breathing problems require immediate medical attention.
+            </div>
+        </div>
+
+        <div class="emergency-card" data-aos="fade-up" data-aos-delay="300">
+            <h3><i class="fas fa-band-aid"></i> Severe Bleeding</h3>
+            <ul class="steps-list">
+                <li>Apply direct pressure to wound</li>
+                <li>Use clean cloth or sterile bandage</li>
+                <li>Elevate injured area if possible</li>
+                <li>Keep pressure until help arrives</li>
+                <li>Call 911 for severe bleeding</li>
+            </ul>
+            <div class="warning">
+                Warning: Seek immediate medical care for uncontrolled bleeding.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

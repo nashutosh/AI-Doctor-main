@@ -1,0 +1,303 @@
+{% extends "base.html" %}
+
+{% block title %}Health Monitoring{% endblock %}
+
+{% block extra_css %}
+<style>
+    .monitoring-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+
+    .monitoring-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .vitals-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .vital-card {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .vital-icon {
+        font-size: 2rem;
+        color: var(--secondary-color);
+        margin-bottom: 1rem;
+    }
+
+    .vital-value {
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .vital-label {
+        color: #666;
+        margin-bottom: 1rem;
+    }
+
+    .vital-status {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+    }
+
+    .status-normal {
+        background: #e3fcef;
+        color: #0a6b39;
+    }
+
+    .status-warning {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-alert {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .chart-section {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+
+    .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .chart-controls {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .chart-select {
+        padding: 0.5rem;
+        border: 2px solid #eee;
+        border-radius: 5px;
+        font-family: inherit;
+    }
+
+    .chart-container {
+        height: 400px;
+        position: relative;
+    }
+
+    .add-reading {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .reading-form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+
+    .form-group input {
+        padding: 0.8rem;
+        border: 2px solid #eee;
+        border-radius: 5px;
+        font-family: inherit;
+    }
+
+    .submit-button {
+        padding: 0.8rem 1.5rem;
+        background: var(--secondary-color);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .submit-button:hover {
+        background: var(--primary-color);
+    }
+
+    @media (max-width: 768px) {
+        .vitals-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .reading-form {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="monitoring-container">
+    <div class="monitoring-header">
+        <h1>Health Monitoring</h1>
+        <p>Track your vital signs and view historical health data</p>
+    </div>
+
+    <div class="vitals-grid">
+        <div class="vital-card" data-aos="fade-up">
+            <i class="fas fa-heartbeat vital-icon"></i>
+            <div class="vital-value">72</div>
+            <div class="vital-label">Heart Rate (BPM)</div>
+            <span class="vital-status status-normal">Normal</span>
+        </div>
+
+        <div class="vital-card" data-aos="fade-up" data-aos-delay="100">
+            <i class="fas fa-stethoscope vital-icon"></i>
+            <div class="vital-value">120/80</div>
+            <div class="vital-label">Blood Pressure (mmHg)</div>
+            <span class="vital-status status-normal">Normal</span>
+        </div>
+
+        <div class="vital-card" data-aos="fade-up" data-aos-delay="200">
+            <i class="fas fa-tint vital-icon"></i>
+            <div class="vital-value">95</div>
+            <div class="vital-label">Blood Sugar (mg/dL)</div>
+            <span class="vital-status status-warning">Elevated</span>
+        </div>
+
+        <div class="vital-card" data-aos="fade-up" data-aos-delay="300">
+            <i class="fas fa-thermometer-half vital-icon"></i>
+            <div class="vital-value">98.6</div>
+            <div class="vital-label">Temperature (°F)</div>
+            <span class="vital-status status-normal">Normal</span>
+        </div>
+    </div>
+
+    <div class="chart-section" data-aos="fade-up">
+        <div class="chart-header">
+            <h2>Historical Data</h2>
+            <div class="chart-controls">
+                <select class="chart-select" id="vitalSelect">
+                    <option value="heartRate">Heart Rate</option>
+                    <option value="bloodPressure">Blood Pressure</option>
+                    <option value="bloodSugar">Blood Sugar</option>
+                    <option value="temperature">Temperature</option>
+                </select>
+                <select class="chart-select" id="timeRange">
+                    <option value="week">Last Week</option>
+                    <option value="month">Last Month</option>
+                    <option value="year">Last Year</option>
+                </select>
+            </div>
+        </div>
+        <div class="chart-container" id="healthChart">
+            <!-- Chart will be rendered here -->
+        </div>
+    </div>
+
+    <div class="add-reading" data-aos="fade-up">
+        <h2>Add New Reading</h2>
+        <form class="reading-form" id="readingForm">
+            <div class="form-group">
+                <label for="vitalType">Vital Sign</label>
+                <select id="vitalType" class="chart-select">
+                    <option value="heartRate">Heart Rate</option>
+                    <option value="bloodPressure">Blood Pressure</option>
+                    <option value="bloodSugar">Blood Sugar</option>
+                    <option value="temperature">Temperature</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="value">Value</label>
+                <input type="text" id="value" placeholder="Enter value">
+            </div>
+            <div class="form-group">
+                <label for="date">Date & Time</label>
+                <input type="datetime-local" id="date">
+            </div>
+            <div class="form-group">
+                <label>&nbsp;</label>
+                <button type="submit" class="submit-button">Add Reading</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Chart.js
+    const ctx = document.createElement('canvas');
+    document.getElementById('healthChart').appendChild(ctx);
+    
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Heart Rate',
+                data: [72, 75, 70, 73, 71, 74, 72],
+                borderColor: 'rgb(52, 152, 219)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
+        }
+    });
+
+    // Handle form submission
+    document.getElementById('readingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const vitalType = document.getElementById('vitalType').value;
+        const value = document.getElementById('value').value;
+        const date = document.getElementById('date').value;
+
+        // TODO: Send data to backend
+        alert('Reading added successfully!');
+        this.reset();
+    });
+
+    // Handle vital type change
+    document.getElementById('vitalSelect').addEventListener('change', function() {
+        // TODO: Update chart data based on selection
+    });
+
+    // Handle time range change
+    document.getElementById('timeRange').addEventListener('change', function() {
+        // TODO: Update chart data based on selection
+    });
+});
+</script>
+{% endblock %} 

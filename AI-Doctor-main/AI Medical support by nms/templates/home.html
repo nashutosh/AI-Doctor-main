@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+
+{% block title %}AI Doctor by NMS - Your Personal Medical Assistant{% endblock %}
+
+{% block extra_css %}
+<style>
+    .splash-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease-out;
+    }
+
+    .splash-content {
+        text-align: center;
+        color: white;
+        animation: fadeIn 1s ease-out;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 3rem;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .splash-logo {
+        width: 180px;
+        height: 180px;
+        margin: 0 auto 2rem;
+        border: 4px solid var(--secondary-color);
+        border-radius: 50%;
+        padding: 25px;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 30px rgba(52, 152, 219, 0.3);
+    }
+
+    .splash-logo i {
+        font-size: 90px;
+        color: white;
+        animation: pulse 2s infinite;
+    }
+
+    .splash-title {
+        font-size: 3.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .splash-subtitle {
+        font-size: 1.5rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 2rem;
+        font-weight: 300;
+    }
+
+    .loading-bar {
+        width: 250px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+        margin: 2rem auto;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .loading-progress {
+        width: 100%;
+        height: 100%;
+        background: white;
+        animation: loading 2s ease-in-out infinite;
+        position: absolute;
+        left: -100%;
+    }
+
+    @keyframes fadeIn {
+        from { 
+            opacity: 0; 
+            transform: translateY(-20px); 
+        }
+        to { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+    }
+
+    @keyframes loading {
+        0% { transform: translateX(0); }
+        50% { transform: translateX(200%); }
+        100% { transform: translateX(0); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    .main-content {
+        opacity: 0;
+        transition: opacity 0.8s ease-in;
+        transform: translateY(20px);
+    }
+
+    .main-content.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Enhanced hero section */
+    .hero {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('/static/images/medical-bg.jpg') center/cover;
+        opacity: 0.1;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .hero-buttons .cta-button {
+        min-width: 200px;
+    }
+
+    .hero-buttons .emergency {
+        background: var(--accent-color);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content" data-aos="fade-up">
+        <h1>AI Doctor by NMS</h1>
+        <p class="hero-subtitle">Your Personal Medical Assistant</p>
+        <div class="hero-description">
+            <p>Advanced AI-powered healthcare guidance at your fingertips</p>
+        </div>
+        <div class="hero-buttons">
+            <a href="{{ url_for('consultation') }}" class="cta-button">Start Consultation</a>
+            <a href="{{ url_for('emergency') }}" class="cta-button emergency">Emergency Guide</a>
+        </div>
+    </div>
+</section>
+
+<section class="about-section">
+    <div class="container">
+        <h2 class="section-title" data-aos="fade-up">Why Choose AI Doctor?</h2>
+        <div class="about-grid">
+            <div class="about-card" data-aos="fade-up">
+                <i class="fas fa-robot"></i>
+                <h3>24/7 AI Assistance</h3>
+                <p>Get instant medical guidance anytime, anywhere through our advanced AI system</p>
+            </div>
+            <div class="about-card" data-aos="fade-up" data-aos-delay="100">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Reliable Information</h3>
+                <p>Access verified medical information and evidence-based recommendations</p>
+            </div>
+            <div class="about-card" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-user-md"></i>
+                <h3>Professional Guidance</h3>
+                <p>Receive structured medical advice based on your symptoms and conditions</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="container">
+        <h2 class="section-title" data-aos="fade-up">Our Services</h2>
+        <div class="feature-grid">
+            <div class="feature-card" data-aos="fade-up">
+                <i class="fas fa-comments-alt"></i>
+                <h3>AI Consultation</h3>
+                <p>Describe your symptoms and get instant medical guidance through our AI-powered chat system</p>
+                <a href="{{ url_for('consultation') }}" class="feature-link">Start Consultation →</a>
+            </div>
+            
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                <i class="fas fa-ambulance"></i>
+                <h3>Emergency Guide</h3>
+                <p>Access quick emergency procedures, first aid instructions, and emergency contact information</p>
+                <a href="{{ url_for('emergency') }}" class="feature-link">View Guide →</a>
+            </div>
+            
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-pills"></i>
+                <h3>Medication Guide</h3>
+                <p>Search medications, check interactions, and learn about side effects and dosage guidelines</p>
+                <a href="{{ url_for('medication') }}" class="feature-link">Explore Medications →</a>
+            </div>
+            
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                <i class="fas fa-file-medical"></i>
+                <h3>Medical Reports</h3>
+                <p>Upload and analyze your medical reports with AI-powered interpretation and tracking</p>
+                <a href="{{ url_for('reports') }}" class="feature-link">Analyze Reports →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="health-monitoring">
+    <div class="container">
+        <h2 class="section-title" data-aos="fade-up">Health Monitoring</h2>
+        <div class="monitoring-content">
+            <div class="monitoring-text" data-aos="fade-right">
+                <h3>Track Your Health Vitals</h3>
+                <ul class="monitoring-features">
+                    <li><i class="fas fa-heartbeat"></i> Heart Rate Monitoring</li>
+                    <li><i class="fas fa-stethoscope"></i> Blood Pressure Tracking</li>
+                    <li><i class="fas fa-thermometer"></i> Temperature Records</li>
+                    <li><i class="fas fa-chart-line"></i> Health Trends Analysis</li>
+                </ul>
+                <a href="{{ url_for('monitoring') }}" class="cta-button secondary">Start Monitoring</a>
+            </div>
+            <div class="monitoring-image" data-aos="fade-left">
+                <!-- Add an appropriate medical monitoring illustration here -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="disclaimer-section">
+    <div class="container">
+        <div class="disclaimer-box" data-aos="fade-up">
+            <h3><i class="fas fa-exclamation-triangle"></i> Medical Disclaimer</h3>
+            <p>This AI medical assistant is designed to provide general information and guidance only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const splashScreen = document.getElementById('splashScreen');
+    const mainContent = document.getElementById('mainContent');
+    const logo = document.querySelector('.splash-logo i');
+    const splashTitle = document.querySelector('.splash-title');
+    const splashSubtitle = document.querySelector('.splash-subtitle');
+    const loadingBar = document.querySelector('.loading-bar');
+
+    // Initial animations
+    logo.style.opacity = '0';
+    splashTitle.style.opacity = '0';
+    splashSubtitle.style.opacity = '0';
+    loadingBar.style.opacity = '0';
+
+    // Sequence animations
+    setTimeout(() => {
+        logo.style.opacity = '1';
+        logo.style.transition = 'opacity 0.5s ease-out';
+    }, 300);
+
+    setTimeout(() => {
+        splashTitle.style.opacity = '1';
+        splashTitle.style.transition = 'opacity 0.5s ease-out';
+    }, 800);
+
+    setTimeout(() => {
+        splashSubtitle.style.opacity = '1';
+        splashSubtitle.style.transition = 'opacity 0.5s ease-out';
+    }, 1200);
+
+    setTimeout(() => {
+        loadingBar.style.opacity = '1';
+        loadingBar.style.transition = 'opacity 0.5s ease-out';
+    }, 1600);
+
+    // Hide splash screen
+    setTimeout(() => {
+        splashScreen.style.opacity = '0';
+        mainContent.classList.add('visible');
+        setTimeout(() => {
+            splashScreen.style.display = 'none';
+        }, 800);
+    }, 3500);
+});
+</script>
+{% endblock %} 

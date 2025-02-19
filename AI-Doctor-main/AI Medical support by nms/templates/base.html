@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Doctor - {% block title %}{% endblock %}</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="{{ url_for('home') }}">
+                <div class="brand-logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>AI Doctor</span>
+                </div>
+            </a>
+        </div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="{{ url_for('home') }}" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="{{ url_for('consultation') }}" class="nav-link"><i class="fas fa-comments"></i> AI Consultation</a></li>
+            <li><a href="{{ url_for('emergency') }}" class="nav-link emergency-link"><i class="fas fa-ambulance"></i> Emergency Guide</a></li>
+            <li><a href="{{ url_for('medication') }}" class="nav-link"><i class="fas fa-pills"></i> Medication</a></li>
+            <li><a href="{{ url_for('reports') }}" class="nav-link"><i class="fas fa-file-medical"></i> Reports</a></li>
+            <li><a href="{{ url_for('monitoring') }}" class="nav-link"><i class="fas fa-heartbeat"></i> Monitoring</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2024 AI Doctor. Medical Disclaimer: This is not a substitute for professional medical advice.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 

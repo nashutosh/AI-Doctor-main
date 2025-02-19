@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}AI Consultation{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chat-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+
+    .chat-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .chat-messages {
+        height: 500px;
+        overflow-y: auto;
+        padding: 1rem;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        margin-bottom: 1rem;
+    }
+
+    .message {
+        margin-bottom: 1rem;
+        padding: 1rem;
+        border-radius: 10px;
+        max-width: 80%;
+    }
+
+    .user-message {
+        background: var(--secondary-color);
+        color: white;
+        margin-left: auto;
+    }
+
+    .ai-message {
+        background: #f1f1f1;
+        color: var(--text-color);
+    }
+
+    .chat-input {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .chat-input textarea {
+        flex: 1;
+        padding: 1rem;
+        border: 2px solid #eee;
+        border-radius: 10px;
+        resize: none;
+        font-family: inherit;
+    }
+
+    .chat-input button {
+        padding: 1rem 2rem;
+        background: var(--secondary-color);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .chat-input button:hover {
+        background: var(--primary-color);
+    }
+
+    .disclaimer {
+        text-align: center;
+        color: var(--accent-color);
+        margin-top: 2rem;
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <h1>AI Medical Consultation</h1>
+        <p>Describe your symptoms and get instant medical guidance</p>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+        <div class="message ai-message">
+            Hello! I'm your AI medical assistant. Please describe your symptoms or health concerns, and I'll do my best to help. Remember, this is not a substitute for professional medical advice.
+        </div>
+    </div>
+
+    <div class="chat-input">
+        <textarea 
+            id="userInput" 
+            placeholder="Type your message here..." 
+            rows="3"
+        ></textarea>
+        <button id="sendButton">Send</button>
+    </div>
+
+    <div class="disclaimer">
+        <p><strong>Important:</strong> This AI consultation is for informational purposes only and should not replace professional medical advice. In case of emergency, please call your local emergency services immediately.</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatMessages = document.getElementById('chatMessages');
+    const userInput = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
+
+    function addMessage(message, isUser = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+        messageDiv.textContent = message;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    async function sendMessage() {
+        const message = userInput.value.trim();
+        if (!message) return;
+
+        // Add user message to chat
+        addMessage(message, true);
+        userInput.value = '';
+
+        try {
+            // Send message to backend
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message })
+            });
+
+            const data = await response.json();
+            
+            // Add AI response to chat
+            addMessage(data.response);
+        } catch (error) {
+            console.error('Error:', error);
+            addMessage('Sorry, I encountered an error. Please try again.');
+        }
+    }
+
+    // Send message on button click
+    sendButton.addEventListener('click', sendMessage);
+
+    // Send message on Enter key (Shift+Enter for new line)
+    userInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+});
+</script>
+{% endblock %} 

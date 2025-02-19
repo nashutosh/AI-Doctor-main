@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+
+{% block title %}Medication Guide{% endblock %}
+
+{% block extra_css %}
+<style>
+    .medication-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+
+    .medication-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .search-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+
+    .search-box {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 1rem;
+        border: 2px solid #eee;
+        border-radius: 10px;
+        font-family: inherit;
+    }
+
+    .search-button {
+        padding: 1rem 2rem;
+        background: var(--secondary-color);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .search-button:hover {
+        background: var(--primary-color);
+    }
+
+    .medication-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .medication-card {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .medication-type {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .type-otc {
+        background: #e3fcef;
+        color: #0a6b39;
+    }
+
+    .type-prescription {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .side-effects {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+
+    .side-effects h4 {
+        color: var(--accent-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .effects-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .effects-list li {
+        margin-bottom: 0.5rem;
+        padding-left: 1.2rem;
+        position: relative;
+    }
+
+    .effects-list li::before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: var(--secondary-color);
+    }
+
+    .interaction-checker {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        margin-top: 2rem;
+    }
+
+    .interaction-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .medication-select {
+        padding: 0.8rem;
+        border: 2px solid #eee;
+        border-radius: 5px;
+    }
+
+    @media (max-width: 768px) {
+        .search-box {
+            flex-direction: column;
+        }
+        
+        .medication-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="medication-container">
+    <div class="medication-header">
+        <h1>Medication Guide</h1>
+        <p>Search medications, check interactions, and learn about side effects</p>
+    </div>
+
+    <div class="search-section" data-aos="fade-up">
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="Search for a medication...">
+            <button class="search-button">Search</button>
+        </div>
+    </div>
+
+    <div class="medication-grid">
+        <div class="medication-card" data-aos="fade-up">
+            <span class="medication-type type-otc">Over the Counter</span>
+            <h3>Acetaminophen (Tylenol)</h3>
+            <p>Pain reliever and fever reducer</p>
+            <div class="side-effects">
+                <h4>Common Side Effects</h4>
+                <ul class="effects-list">
+                    <li>Nausea</li>
+                    <li>Stomach pain</li>
+                    <li>Loss of appetite</li>
+                    <li>Headache</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="medication-card" data-aos="fade-up" data-aos-delay="100">
+            <span class="medication-type type-prescription">Prescription Only</span>
+            <h3>Amoxicillin</h3>
+            <p>Antibiotic medication</p>
+            <div class="side-effects">
+                <h4>Common Side Effects</h4>
+                <ul class="effects-list">
+                    <li>Diarrhea</li>
+                    <li>Rash</li>
+                    <li>Nausea</li>
+                    <li>Vomiting</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="medication-card" data-aos="fade-up" data-aos-delay="200">
+            <span class="medication-type type-otc">Over the Counter</span>
+            <h3>Ibuprofen (Advil)</h3>
+            <p>Pain reliever and anti-inflammatory</p>
+            <div class="side-effects">
+                <h4>Common Side Effects</h4>
+                <ul class="effects-list">
+                    <li>Stomach pain</li>
+                    <li>Heartburn</li>
+                    <li>Dizziness</li>
+                    <li>Mild headache</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="interaction-checker" data-aos="fade-up">
+        <h2>Drug Interaction Checker</h2>
+        <p>Select medications to check for potential interactions</p>
+        <form class="interaction-form">
+            <select class="medication-select" multiple>
+                <option value="acetaminophen">Acetaminophen (Tylenol)</option>
+                <option value="ibuprofen">Ibuprofen (Advil)</option>
+                <option value="aspirin">Aspirin</option>
+                <option value="amoxicillin">Amoxicillin</option>
+                <option value="lisinopril">Lisinopril</option>
+            </select>
+            <button type="submit" class="search-button">Check Interactions</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('.search-input');
+    const searchButton = document.querySelector('.search-button');
+    const medicationCards = document.querySelectorAll('.medication-card');
+    
+    searchButton.addEventListener('click', function() {
+        const searchTerm = searchInput.value.toLowerCase();
+        
+        medicationCards.forEach(card => {
+            const medicationName = card.querySelector('h3').textContent.toLowerCase();
+            if (medicationName.includes(searchTerm)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+
+    // Prevent form submission
+    document.querySelector('.interaction-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // TODO: Implement interaction checking logic
+        alert('Drug interaction checking will be implemented soon.');
+    });
+});
+</script>
+{% endblock %} 
