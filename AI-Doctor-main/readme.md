@@ -2,7 +2,7 @@
 
 Welcome to **AI Doctor**, your personal AI-powered medical assistant designed to provide instant medical guidance, health monitoring, and emergency information. This application leverages advanced AI technology to assist users in managing their health effectively.
 
-![AI Doctor Logo](AI-Doctor-main/AI%20Medical%20support%20by%20nms/Images/Screenshot%202025-02-14%20194207.png)
+![AI Doctor Logo](AI-Doctor-main/AI Medical support by nms/Images/Screenshot 2025-02-14 194207.png)
 
 ## Table of Contents 📚
 - [Features](#features)
